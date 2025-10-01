@@ -1,5 +1,3 @@
-# Rhodes
-
 ![banner](./.assets/banner.png)
 
 Rhodes is a 2D engine written in Rust that allows you to create games using Luau.

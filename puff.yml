@@ -1,0 +1,8 @@
+configuration:
+  default: tests
+
+tasks:
+  tests:
+    description: Run tests with console outputs
+    commands:
+      - cargo test -- --no-capture
