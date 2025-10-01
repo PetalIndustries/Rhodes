@@ -935,6 +935,7 @@ dependencies = [
  "anyhow",
  "glfw",
  "mlua",
+ "num-traits",
 ]
 
 [[package]]

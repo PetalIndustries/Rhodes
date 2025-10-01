@@ -1,12 +1,54 @@
 - render
-  - texture
-    - rect (filled)
-    - line
-    - triangle (filled)
-    - circle (filled)
-    - ellipse
-    - sprite
-    - string
-    - shaders
+  - polygon
+    - vertices
+    - uvs
+      - kinds
+          - rect (filled)
+          - line
+          - triangle (filled)
+          - circle (filled)
+          - ellipse
+          - string
 
-  -
+  - texture
+    - id
+    - size
+
+  - RuntimeAPI (trait)
+    - glfw
+    - wasm
+
+  - Vector2D<T>
+   - fields: T x, y
+   - clamp (v1, v2)
+   - lerp (v, t)
+   - distance
+   - dot_product
+   - cross_product
+   - angle
+   - length
+   - manhattan_distance
+   - max
+   - min
+   - swap
+   - normalise
+   - abs
+   - perpendicular
+   - floor
+   - ceil
+   - round
+   - as_cartesian
+   - as_polar
+   - to_string
+   - ops (component-wise):
+    - "+"
+    - "-"
+    - "*"
+    - "/"
+    - "+="
+    - "-="
+    - "*="
+    - "/="
+
+  - Vector2i
+  - Vector2f
