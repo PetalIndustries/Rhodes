@@ -1,5 +1,5 @@
 use std::{fmt::Display, ops::{Add, AddAssign, Div, DivAssign, Mul, MulAssign, Sub, SubAssign}};
-use num_traits::Float;
+use num_traits::{Float, Num};
 
 /// Vector 2D
 ///
@@ -7,22 +7,18 @@ use num_traits::Float;
 #[derive(Default, Debug, Clone, Copy)]
 pub struct Vec2D<T>
 where
-  T: Float + Default + Clone + Copy
+  T: Num + Default + Clone + Copy
 {
   pub x: T,
-  pub y: T,
+  pub y: T
 }
 
 pub type Vec2i = Vec2D<i32>;
 pub type Vec2f = Vec2D<f32>;
 
-impl<T: Float + Default + Copy> Vec2D<T> {
+impl<T: Num + Default + Copy> Vec2D<T> {
   pub fn new(x: T, y: T) -> Self {
     Self { x, y }
-  }
-
-  pub fn clamp(&self, start: &Self, end: &Self) -> Self {
-    Self::new(self.x.clamp(start.x, end.x), self.y.clamp(start.y, end.y))
   }
 
   pub fn lerp(&self, end: &Self, time: T) -> Self {
@@ -34,36 +30,12 @@ impl<T: Float + Default + Copy> Vec2D<T> {
     }
   }
 
-  pub fn distance(&self, end: &Self) -> T {
-    (*self - *end).length()
-  }
-
-  pub fn manhattan_distance(&self, end: &Self) -> T {
-    (self.x - end.x).abs() + (self.y - end.y).abs()
-  }
-
   pub fn dot_product(&self, other: &Self) -> T {
     self.x * other.x + self.y * other.y
   }
 
   pub fn cross_product(&self, other: &Self) -> T {
     self.x * other.y - self.y * other.x
-  }
-
-  pub fn angle(&self, other: &Self) -> T {
-    self.dot_product(other) / (self.length() + other.length())
-  }
-
-  pub fn length(&self) -> T {
-    (self.x * self.x + self.y * self.y).sqrt()
-  }
-
-  pub fn min(&self, other: &Self) -> Self {
-    Self::new(self.x.min(other.x), self.y.min(other.y))
-  }
-
-  pub fn max(&self, other: &Self) -> Self {
-    Self::new(self.x.max(other.x), self.y.max(other.y))
   }
 
   pub fn swap(&mut self, other: &mut Self) {
@@ -75,12 +47,9 @@ impl<T: Float + Default + Copy> Vec2D<T> {
     other.x = temp.x;
     other.y = temp.y;
   }
+}
 
-  pub fn normalise(&self) -> Self {
-    let inv = T::one() / self.length();
-    Self::new(self.x * inv, self.y * inv)
-  }
-
+impl<T: Float + Default + Copy> Vec2D<T> {
   pub fn abs(&self) -> Self {
     Self::new(self.x.abs(), self.y.abs())
   }
@@ -101,12 +70,45 @@ impl<T: Float + Default + Copy> Vec2D<T> {
     Self::new(self.x.round(), self.y.round())
   }
 
-  pub fn as_cartesian(&self) -> Self {
+  pub fn to_cartesian(&self) -> Self {
     Self::new(self.y.cos() * self.x, self.y.sin() * self.y)
   }
 
-  pub fn as_polar(&self) -> Self {
+  pub fn to_polar(&self) -> Self {
     Self::new(self.length(), self.y.atan2(self.x))
+  }
+
+  pub fn length(&self) -> T {
+    (self.x * self.x + self.y * self.y).sqrt()
+  }
+
+  pub fn angle(&self, other: &Self) -> T {
+    self.dot_product(other) / (self.length() + other.length())
+  }
+
+  pub fn min(&self, other: &Self) -> Self {
+    Self::new(self.x.min(other.x), self.y.min(other.y))
+  }
+
+  pub fn max(&self, other: &Self) -> Self {
+    Self::new(self.x.max(other.x), self.y.max(other.y))
+  }
+
+  pub fn normalise(&self) -> Self {
+    let inv = T::one() / self.length();
+    Self::new(self.x * inv, self.y * inv)
+  }
+
+  pub fn distance(&self, end: &Self) -> T {
+    (*self - *end).length()
+  }
+
+  pub fn manhattan_distance(&self, end: &Self) -> T {
+    (self.x - end.x).abs() + (self.y - end.y).abs()
+  }
+
+  pub fn clamp(&self, start: &Self, end: &Self) -> Self {
+    Self::new(self.x.clamp(start.x, end.x), self.y.clamp(start.y, end.y))
   }
 }
 

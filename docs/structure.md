@@ -50,5 +50,5 @@
     - "*="
     - "/="
 
-  - Vector2i
-  - Vector2f
+  - Vec2i
+  - Vec2f

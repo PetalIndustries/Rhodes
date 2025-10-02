@@ -1,21 +1,31 @@
-use crate::runtimeapi::{runtimes::{glfw::PlatformGLFW, webgl::PlatformWebGL}, PlatformAPI};
+use crate::platformapi::{glfw::PlatformGLFW, PlatformAPI};
 
 #[cfg(test)]
 mod tests;
-mod runtimeapi;
 
-pub enum PlatformKind {
-  GLFW,
-  WebGL
-}
+mod core;
+mod platformapi;
 
-pub fn init(platform: PlatformKind) -> anyhow::Result<()> {
-  let platform: Box<dyn PlatformAPI> = match platform {
-    PlatformKind::GLFW => Box::new(PlatformGLFW::new()),
-    PlatformKind::WebGL => Box::new(PlatformWebGL::new())
+#[cfg(all(feature = "glfw", feature = "webgl"))]
+compile_error!("Features 'glfw' and 'webgl' cannot be enabled at the same time");
+
+#[cfg(not(any(feature = "glfw", feature = "webgl")))]
+compile_error!("You must enable exactly one feature: either 'glfw' or 'webgl'");
+
+pub fn init() -> anyhow::Result<()> {
+  let platform: Box<dyn PlatformAPI> = {
+    #[cfg(feature = "glfw")]
+    {
+      Box::new(PlatformGLFW::new())
+    }
+
+    #[cfg(feature = "webgl")]
+    {
+      Box::new(PlatformWebGL::new())
+    }
   };
 
-  platform.destroy();
+  platform.construct_window();
 
   Ok(())
 }

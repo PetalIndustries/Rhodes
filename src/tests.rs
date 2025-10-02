@@ -1,4 +1,4 @@
-use crate::runtimeapi::primitives::vec2d::Vec2f;
+use crate::core::primitives::vec2d::Vec2f;
 
 #[test]
 fn math_lerp() -> anyhow::Result<()> {
@@ -15,9 +15,7 @@ fn math_lerp() -> anyhow::Result<()> {
 
 #[test]
 fn run_glfw() -> anyhow::Result<()> {
-  crate::init(crate::PlatformKind::GLFW)?;
+  crate::init()?;
 
   Ok(())
 }
-
-// (x,y)
