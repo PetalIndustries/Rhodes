@@ -1,6 +1,6 @@
-use crate::{core::primitives::{color::Color, vec2d::Vec2i}, platformapi::PlatformAPI};
+//use crate::{core::primitives::{color::Color, vec2d::Vec2i}, platformapi::PlatformAPI};
 
-pub struct PlatformWebGL;
+/*pub struct PlatformWebGL;
 
 impl PlatformWebGL {
   pub fn new() -> Self {
@@ -20,4 +20,10 @@ impl PlatformAPI for PlatformWebGL {
   fn poll_events(&self) {}
   fn draw_polygon(&self) {}
   fn construct_window(&mut self, size: &mut Vec2i, is_vsync: bool, is_fullscreen: bool) {}
-}
+}*/
+
+/*impl IntoRhodesKey<T> for webgl::Key {
+  fn into(self) -> Key {
+    todo!()
+  }
+}*/

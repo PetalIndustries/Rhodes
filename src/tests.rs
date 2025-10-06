@@ -1,4 +1,4 @@
-use crate::core::primitives::vec2d::Vec2f;
+use crate::primitives::vec2d::Vec2f;
 
 #[test]
 fn math_lerp() -> anyhow::Result<()> {
