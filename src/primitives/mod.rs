@@ -1,5 +1,5 @@
 pub mod color;
 pub mod ecs;
 pub mod entity;
-pub mod typeidstorage;
+pub mod typeidmap;
 pub mod vec2d;

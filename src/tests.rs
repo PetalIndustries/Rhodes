@@ -1,4 +1,4 @@
-use crate::primitives::{typeidstorage::TypeIdStorage, vec2d::Vec2f};
+use crate::primitives::typeidmap::TypeIdMap;
 
 // #[test]
 // fn math_lerp() -> anyhow::Result<()> {
@@ -20,21 +20,31 @@ use crate::primitives::{typeidstorage::TypeIdStorage, vec2d::Vec2f};
 //   Ok(())
 // }
 
+pub struct SampleState;
 #[derive(Debug)]
-pub struct AssState(pub i32, pub i32);
-#[derive(Debug)]
-pub struct InputState(pub i32, pub i32);
+pub struct InputState<'a> {
+  example_string: &'a str
+}
 
 #[test]
 fn test_typeid_storage() {
-  let mut storage = TypeIdStorage::new();
-  storage.insert(AssState(0, 3));
+  let mut storage = TypeIdMap::new();
+  storage.insert(SampleState);
 
-  let ass_state = storage.get::<AssState>();
+  assert!(storage.get::<SampleState>().is_some(), "SampleState not found in TypeIdMap");
+  assert!(storage.get::<InputState>().is_none(), "InputState found in TypeIdMap (is not None)");
+}
 
-  println!("AssState: {ass_state:?}");
+#[test]
+fn test_world_resource() {
+  let mut engine = crate::init();
 
-  let input_state = storage.get::<InputState>();
+  let world = engine.get_world_mut();
+  world.add_resource(InputState { example_string: "example caption" });
 
-  println!("InputState: {input_state:?}");
+  let input = world.get_resource::<InputState>();
+
+  assert!(input.is_some(), "InputState is not within world.resources");
+
+  println!("InputState is {input:?}");
 }

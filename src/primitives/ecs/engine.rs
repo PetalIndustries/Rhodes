@@ -65,4 +65,8 @@ impl Engine {
   pub fn get_world<'a>(&'a self) -> &'a World {
     &self.world
   }
+
+  pub fn get_world_mut<'a>(&'a mut self) -> &'a mut World {
+    &mut self.world
+  }
 }

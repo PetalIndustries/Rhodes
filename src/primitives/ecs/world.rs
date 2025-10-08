@@ -1,28 +1,13 @@
-use std::{any::Any, collections::HashMap};
-use crate::primitives::{ecs::entity::Entity, typeidstorage::TypeIdStorage};
+use std::collections::HashMap;
+use crate::primitives::{ecs::entity::Entity, typeidmap::TypeIdMap};
 
+#[derive(Default)]
 pub struct World {
   next_id: u32,
   entities: HashMap<u32, Entity>,
-  // 0      Entity(0)
-  // 1      Entity(1)
-  // 2      Entity(2)
-  // 3      Entity(3)
-  components: TypeIdStorage<HashMap<Entity, Box<dyn Any>>>, //HashMap<TypeId, HashMap<Entity, Box<dyn Any>>>       value -> HashMap<Entity, Box<dyn Any>>,
+  components: TypeIdMap, //HashMap<TypeId, HashMap<Entity, Box<dyn Any>>>       value -> HashMap<Entity, Box<dyn Any>>,
   // global game state
-  // resources: TypeIdStorage<Box<dyn Any>>
-  resources: TypeIdStorage
-}
-
-impl Default for World {
-  fn default() -> Self {
-    Self {
-      next_id: 0,
-      entities: HashMap::new(),
-      components: TypeIdStorage::new(),
-      resources: TypeIdStorage::new(),
-    }
-  }
+  resources: TypeIdMap
 }
 
 impl World {
@@ -39,7 +24,15 @@ impl World {
   }
 
   pub fn add_resource<T: 'static>(&mut self, value: T) {
-    self.resources.insert(Box::new(value));
+    self.resources.insert(value);
+  }
+
+  pub fn get_resource<'a, T: 'static>(&'a self) -> Option<&'a T> {
+    self.resources.get::<T>()
+  }
+
+  pub fn get_resource_mut<'a, T: 'static>(&'a mut self) -> Option<&'a mut T> {
+    self.resources.get_mut::<T>()
   }
 
   pub fn remove_resource<T: 'static>(&mut self) {
