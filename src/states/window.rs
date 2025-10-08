@@ -2,7 +2,7 @@ use crate::PlatformAPI;
 use std::rc::Rc;
 use std::cell::RefCell;
 
-use crate::core::primitives::vec2d::Vec2i;
+use crate::primitives::vec2d::Vec2i;
 
 pub struct Window {
   platform: Rc<RefCell<dyn PlatformAPI>>,

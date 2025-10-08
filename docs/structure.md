@@ -52,3 +52,8 @@
 
   - Vec2i
   - Vec2f
+
+
+1) Components are collections of data.
+2) Systems iterate over and process Components.
+3) Entities are collections of Components.

@@ -1,43 +1,68 @@
-use crate::{primitives::ecs::{system::System, world::World}, platform::PlatformAPI};
+use std::collections::HashMap;
+use mlua::Lua;
+use crate::{primitives::ecs::{world::World}, platform::PlatformAPI};
 
 pub struct Engine {
   world: World,
-  systems: Vec<Box<dyn System>>,
-  platform: Box<dyn PlatformAPI>
+
+  systems: HashMap<usize, SystemClojure>,
+  next_system_id: usize,
+
+  platform: Box<dyn PlatformAPI>,
+  lua: Lua
 }
 
+pub type SystemClojure = Box<dyn FnMut(&mut World)>;
+
 impl Engine {
-  pub fn new(platform: Box<dyn PlatformAPI>) -> Self {
+  pub fn new() -> Self {
+    let platform = Self::detect_platform();
+
     Self {
       world: World::default(),
-      systems: Vec::default(),
+      systems: HashMap::new(),
+      next_system_id: 0,
+      lua: Lua::new(),
       platform
     }
   }
 
-  pub fn update(&self, dt: f64) {
-    for system in self.systems.iter() {
-      system.update(self);
+  fn detect_platform() -> Box<dyn PlatformAPI> {
+    #[cfg(feature = "glfw")]
+    {
+      Box::new(crate::platform::glfw::PlatformGLFW::new())
+    }
+
+    #[cfg(feature = "webgl")]
+    {
+      Box::new(crate::platform::webgl::PlatformWebGL::new())
+    }
+  }
+
+  // todo: use delta_time
+  pub fn update(&mut self, _dt: f64) {
+    for (_, system) in self.systems.iter_mut() {
+      system(&mut self.world);
     }
   }
 
   // systems
 
-  pub fn attach_system(&mut self, system: Box<dyn System>) {
-    self.systems.push(system);
+  pub fn add_system<F: FnMut(&mut World) + 'static>(&mut self, system: F) -> usize {
+    let id = self.next_system_id;
+    self.next_system_id += 1;
+    self.systems.insert(id, Box::new(system));
+
+    id
   }
 
-  pub fn detach_system(&mut self, index: usize) {
-    self.systems.
+  pub fn remove_system(&mut self, index: usize) {
+    self.systems.remove(&index);
   }
 
   // world
 
   pub fn get_world<'a>(&'a self) -> &'a World {
     &self.world
-  }
-
-  pub fn set_world(&mut self, world: World){
-    self.world = world;
   }
 }

@@ -1,13 +1,13 @@
-use crate::primitives::ecs::{engine::Engine, system::System};
+use crate::primitives::ecs::world::World;
+// use crate::states::input::Input;
+use crate::primitives::ecs::system::System;
 
 pub struct InputSystem;
 
 impl System for InputSystem {
-  fn init(&self, engine: &Engine) { }
+  fn init(&self, world: &World) { }
 
-  fn update(&self, engine: &Engine) {
+  fn update(&self, world: &World) { }
 
-  }
-
-  fn destroy(self, engine: &Engine) { }
+  fn destroy(self, world: &World) { }
 }

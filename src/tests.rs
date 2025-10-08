@@ -1,21 +1,40 @@
-use crate::primitives::vec2d::Vec2f;
+use crate::primitives::{typeidstorage::TypeIdStorage, vec2d::Vec2f};
+
+// #[test]
+// fn math_lerp() -> anyhow::Result<()> {
+//   let v: Vec2f = Vec2f::default();
+
+//   println!("Old: {v:?}");
+
+//   v.lerp(&Vec2f::new(1.0, 4.0), 2.0);
+
+//   println!("After lerp: {v:?}");
+
+//   Ok(())
+// }
+
+// #[test]
+// fn run_glfw() -> anyhow::Result<()> {
+//   crate::init()?;
+
+//   Ok(())
+// }
+
+#[derive(Debug)]
+pub struct AssState(pub i32, pub i32);
+#[derive(Debug)]
+pub struct InputState(pub i32, pub i32);
 
 #[test]
-fn math_lerp() -> anyhow::Result<()> {
-  let v: Vec2f = Vec2f::default();
+fn test_typeid_storage() {
+  let mut storage = TypeIdStorage::new();
+  storage.insert(AssState(0, 3));
 
-  println!("Old: {v:?}");
+  let ass_state = storage.get::<AssState>();
 
-  v.lerp(&Vec2f::new(1.0, 4.0), 2.0);
+  println!("AssState: {ass_state:?}");
 
-  println!("After lerp: {v:?}");
+  let input_state = storage.get::<InputState>();
 
-  Ok(())
-}
-
-#[test]
-fn run_glfw() -> anyhow::Result<()> {
-  crate::init()?;
-
-  Ok(())
+  println!("InputState: {input_state:?}");
 }

@@ -1,9 +1,9 @@
-use crate::primitives::ecs::engine::Engine;
+use crate::primitives::ecs::world::World;
 
 pub trait System {
-  fn init(&self, engine: &Engine);
+  fn init(&self, world: &World);
 
-  fn update(&self, engine: &Engine);
+  fn update(&self, world: &World);
 
-  fn destroy(self, engine: &Engine);
+  fn destroy(self, world: &World);
 }

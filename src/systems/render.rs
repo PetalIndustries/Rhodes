@@ -1,13 +1,11 @@
-use crate::primitives::ecs::{engine::Engine, system::System};
+use crate::primitives::ecs::{world::World, system::System};
 
 pub struct RenderSystem;
 
 impl System for RenderSystem {
-  fn init(&self, engine: &Engine) { }
+  fn init(&self, _world: &World) { }
 
-  fn update(&self, engine: &Engine) {
+  fn update(&self, _world: &World) { }
 
-  }
-
-  fn destroy(self, engine: &Engine) { }
+  fn destroy(self, _world: &World) { }
 }
