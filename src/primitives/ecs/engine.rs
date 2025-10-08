@@ -1,6 +1,6 @@
 use std::collections::HashMap;
 use mlua::Lua;
-use crate::{primitives::ecs::{world::World}, platform::PlatformAPI};
+use crate::{platform::PlatformAPI, primitives::{ecs::world::World, vec2d::Vec2i}};
 
 pub struct Engine {
   world: World,
@@ -16,7 +16,11 @@ pub type SystemClojure = Box<dyn FnMut(&mut World)>;
 
 impl Engine {
   pub fn new() -> Self {
-    let platform = Self::detect_platform();
+    let mut platform = Self::detect_platform();
+
+    // temporary code
+    platform.initialize();
+    platform.construct_window(&mut Vec2i::new(800, 600), false, false);
 
     Self {
       world: World::default(),
