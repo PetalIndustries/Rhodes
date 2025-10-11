@@ -1,18 +1,23 @@
 use std::collections::HashMap;
 use mlua::Lua;
-use crate::{platform::PlatformAPI, primitives::{ecs::world::World, vec2d::Vec2i}};
+use crate::{platform::PlatformAPI, primitives::{ecs::{engine::resources::TimeResource, world::World}, vec2d::Vec2i}};
+use std::time::Instant;
+
+pub mod resources;
+
+pub type SystemClojure = Box<dyn FnMut(&mut World)>;
 
 pub struct Engine {
+  platform: Box<dyn PlatformAPI>,
+  lua: Lua,
+
   world: World,
 
   systems: HashMap<usize, SystemClojure>,
   next_system_id: usize,
 
-  platform: Box<dyn PlatformAPI>,
-  lua: Lua
+  is_running: bool
 }
-
-pub type SystemClojure = Box<dyn FnMut(&mut World)>;
 
 impl Engine {
   pub fn new() -> Self {
@@ -22,12 +27,16 @@ impl Engine {
     platform.initialize();
     platform.construct_window(&mut Vec2i::new(800, 600), false, false);
 
+    let mut world = World::default();
+    world.add_resource(TimeResource::default());
+
     Self {
-      world: World::default(),
+      world,
       systems: HashMap::new(),
       next_system_id: 0,
       lua: Lua::new(),
-      platform
+      platform,
+      is_running: true
     }
   }
 
@@ -43,8 +52,22 @@ impl Engine {
     }
   }
 
-  // todo: use delta_time
-  pub fn update(&mut self, _dt: f64) {
+  pub fn start(&mut self) {
+    let mut last_update = Instant::now();
+
+    while self.is_running {
+      let delta_time = last_update.elapsed().as_secs_f32();
+      last_update = Instant::now();
+
+      self.update(delta_time);
+    }
+  }
+
+  /// Calls all systems
+  pub fn update(&mut self, delta_time: f32) {
+    let time = self.world.resource_mut::<TimeResource>();
+    time.update_delta_time(delta_time);
+
     for (_, system) in self.systems.iter_mut() {
       system(&mut self.world);
     }

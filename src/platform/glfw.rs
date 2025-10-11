@@ -49,13 +49,6 @@ impl PlatformGLFW {
 impl PlatformAPI for PlatformGLFW {
   fn initialize(&mut self) {
     self.context = Some(glfw::init(error_handler).expect("Failed to initialize GLFW"));
-
-    if let Some(window) = &mut self.window {
-      load_proc!(window, ClearColor);
-      load_proc!(window, Clear);
-      load_proc!(window, Hint);
-      load_proc!(window, Enable);
-    }
   }
 
   fn destroy(&self) {
@@ -124,6 +117,11 @@ impl PlatformAPI for PlatformGLFW {
           window.set_mouse_button_callback(mouse_button_callback);
           window.set_key_callback(key_callback);
 
+          load_proc!(window, ClearColor);
+          load_proc!(window, Clear);
+          load_proc!(window, Hint);
+          load_proc!(window, Enable);
+
           self.window = Some(window);
 
           if is_vsync {
@@ -132,7 +130,6 @@ impl PlatformAPI for PlatformGLFW {
               ctx.window_hint(WindowHint::RefreshRate(Some(video_mode.refresh_rate)));
             }
           }
-
         } else {
           log::error!("[GLFW] Can't find primary monitor");
           panic!("GLFW runtime error");

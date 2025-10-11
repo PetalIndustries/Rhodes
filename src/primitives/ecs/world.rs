@@ -11,7 +11,7 @@ pub struct World {
 }
 
 impl World {
-  // todo: revisiion return value
+  // todo: revision return value
   // probably user won't use Entity type
   pub fn create_entity(&mut self) -> Entity {
     let id = self.next_id;
@@ -33,6 +33,14 @@ impl World {
 
   pub fn get_resource_mut<'a, T: 'static>(&'a mut self) -> Option<&'a mut T> {
     self.resources.get_mut::<T>()
+  }
+
+  pub(crate) fn resource<'a, T: 'static>(&'a mut self) -> &T {
+    self.resources.get::<T>().unwrap()
+  }
+
+  pub(crate) fn resource_mut<'a, T: 'static>(&'a mut self) -> &'a mut T {
+    self.resources.get_mut::<T>().unwrap()
   }
 
   pub fn remove_resource<T: 'static>(&mut self) {
